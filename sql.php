@@ -34,7 +34,7 @@ if (isset($_POST['json'])) {
                     }
                     $data[] = $record;
                 }
-                echo json_encode($data);
+                echo json_encode(array("error" => "true", "message" => $data));
             }
         } catch (exception $e) {
             echo json_encode(array("error" => "true", "message" => "Failed to execute query: " . $e->getMessage()));
@@ -63,7 +63,6 @@ if (isset($_POST['json'])) {
                 background: black;
                 color: limegreen;
                 font-family: system-ui;
-                zoom: 2;
             }
 
             * {
@@ -71,9 +70,9 @@ if (isset($_POST['json'])) {
             }
 
             p {
-                font-size: 8px;
+                font-size: 15px;
                 width: 50%;
-                max-width: 300px;
+                max-width: 700px;
                 margin-bottom: 25px;
             }
 
@@ -106,6 +105,7 @@ if (isset($_POST['json'])) {
                 background: limegreen;
                 color: white;
                 border: none;
+                cursor: pointer;
             }
 
             input[type="submit"]:hover {
@@ -129,10 +129,15 @@ if (isset($_POST['json'])) {
     </head>
 
     <body>
-        <h6>sql @ dangoweb.com</h6>
+        <h2>sql @ dangoweb.com</h2>
         <p>Learn how to connect to a SQL server externally using vanilla JavaScript. To begin, enter your database login details you have created. Most often your database name will start with 'username_' if your username is 'username'. Then, craft your SQL query to use the database. You can use SELECT, INSERT, UPDATE, DELETE, and more functions. I have added buttons for pre-filling the query if you need help.</p>
         <p>To log into the database panel directly to view and edit your data, go to <a href="https://da.dangoweb.com/phpmyadmin">phpMyAdmin</a>. If you haven't already made a database for yourself, create one in the <a href="https://da.dangoweb.com:2222/user/database">Web Hosting panel here</a>.</p>
-        <form method="post" action="">
+        <p>An example of working connection details is below. It connects to the database on server with correct credentials, executes a correct query, and returns the requested data.</p>
+        <img src="example.png" width="200" />
+        <video controls style="width: 500px;">
+            <source src="example.mp4" type="video/mp4">
+        </video>
+        <form method="post" action="#query">
             <div class="section">
                 <header>--- connection ---</header>
                 <div>Username: <input type="text" name="username" value="<?php echo isset($_POST["username"]) ? $_POST["username"] : "" ?>" required></div>
@@ -140,7 +145,7 @@ if (isset($_POST['json'])) {
                 <div>Database: <input type="text" name="database" value="<?php echo isset($_POST["database"]) ? $_POST["database"] : "" ?>" required></div>
                 <div>Server: <?php echo $_SERVER['SERVER_NAME'] ?></div>
             </div>
-            <div class="section">
+            <div class="section" id="query">
                 <header>--- query ---</header>
                 <!--insert into tableName (`columnName`) values('hello')-->
                 <div>Query: <input type="text" name="query" value="<?php echo isset($_POST["query"]) ? $_POST["query"] : "" ?>" required></div>
@@ -200,25 +205,30 @@ if (isset($_POST['json'])) {
                         echo "<div>URL: http://$_SERVER[SERVER_NAME]$_SERVER[REQUEST_URI]</div></div>";
                         echo "<div class='section'><header>--- example ---</header>";
                         $script = <<<EOT
-                    <code>
-                        fetch('http://$_SERVER[SERVER_NAME]$_SERVER[REQUEST_URI]', {
-                        <tab>method: 'POST',</tab>
-                        <tab>headers: {</tab>
-                        <tab><tab></tab>'Content-Type': 'application/x-www-form-urlencoded',</tab>
-                        <tab>},</tab>
-                        <tab>body: new URLSearchParams({</tab>
-                        <tab><tab>'username': '$username',</tab></tab>
-                        <tab><tab>'password': '$password',</tab></tab>
-                        <tab><tab>'database': '$database',</tab></tab>
-                        <tab><tab>'query': '$query',</tab></tab>
-                        <tab><tab>'json': 'true'</tab></tab>
+                    <code onclick="copy()">
+                        <tab>fetch('http://$_SERVER[SERVER_NAME]$_SERVER[REQUEST_URI]', {</tab>
+                        <tab><tab>method: 'POST',</tab></tab>
+                        <tab><tab>headers: {</tab></tab>
+                        <tab><tab><tab></tab>'Content-Type': 'application/x-www-form-urlencoded',</tab></tab>
+                        <tab><tab>},</tab></tab>
+                        <tab><tab>body: new URLSearchParams({</tab></tab>
+                        <tab><tab><tab>'username': '$username',</tab></tab></tab>
+                        <tab><tab><tab>'password': '$password',</tab></tab></tab>
+                        <tab><tab><tab>'database': '$database',</tab></tab></tab>
+                        <tab><tab><tab>'query': '$query',</tab></tab></tab>
+                        <tab><tab><tab>'json': 'true'</tab></tab></tab>
+                        <tab><tab>})</tab></tab>
                         <tab>})</tab>
-                        })
-                        .then(response => response.json())
-                        .then(data => console.log(data))
-                        .catch((error) => {
-                        <tab>console.error('Error:', error);</tab>
-                        });
+                        <tab>.then(response => response.json())</tab>
+                        <tab>.then(data => {</tab>
+                        <tab><tab>if (data.error && data.error === true) alert(data.message);</tab></tab>
+                        <tab><tab>try {</tab></tab>
+                        <tab><tab><tab>data.message.forEach(row => alert(row.columnName));</tab></tab></tab>
+                        <tab><tab>} catch { };</tab></tab>
+                        <tab>})</tab>
+                        <tab>.catch((error) => {</tab>
+                        <tab><tab>console.error('Error:', error);</tab></tab>
+                        <tab>});</tab>
                     </code>
                     EOT;
 
@@ -234,6 +244,38 @@ if (isset($_POST['json'])) {
             ?>
         </div>
     </body>
+    <script>
+        window.onload = function() {
+            if (window.location.hash) {
+                window.location.hash = "#query";
+            }
+        }
+
+        function copy() {
+            function selectText(node) {
+                node = document.querySelector(node);
+
+                if (document.body.createTextRange) {
+                    const range = document.body.createTextRange();
+                    range.moveToElementText(node);
+                    range.select();
+                } else if (window.getSelection) {
+                    const selection = window.getSelection();
+                    const range = document.createRange();
+                    range.selectNodeContents(node);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                };
+            };
+
+            document.querySelector('code').addEventListener('click', () => {
+                selectText('code');
+                document.execCommand('copy');
+                alert('Copied to clipboard!');
+                document.getSelection().removeAllRanges();
+            });
+        };
+    </script>
 
     </html>
 <?php
