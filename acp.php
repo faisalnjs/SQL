@@ -49,6 +49,7 @@ if (isset($_POST['json'])) {
 
     <head>
         <title>sql @ dangoweb.com</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
             html {
                 margin: 1%;
@@ -74,8 +75,7 @@ if (isset($_POST['json'])) {
 
             p {
                 font-size: 15px;
-                width: 50%;
-                max-width: 700px;
+                width: clamp(300px, 50%, 700px);
                 margin-bottom: 25px;
             }
 
@@ -145,6 +145,10 @@ if (isset($_POST['json'])) {
                 font-family: monospace;
             }
 
+            code * {
+                font-family: monospace;
+            }
+
             tab {
                 margin-left: 15px;
             }
@@ -170,6 +174,13 @@ if (isset($_POST['json'])) {
             .intro.active,
             .hints.active {
                 height: 100%;
+            }
+
+            @media screen and (max-width: 900px) {
+                .hints>* {
+                    flex-direction: column !important;
+                    align-items: flex-start !important;
+                }
             }
         </style>
     </head>
