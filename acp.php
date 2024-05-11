@@ -240,7 +240,7 @@ if (isset($_POST['json'])) {
                         echo "<div class='section'><header>--- example ---</header>";
                         $script = <<<EOT
                     <code onclick="copy()">
-                        <tab>fetch('http://$_SERVER[SERVER_NAME]$_SERVER[REQUEST_URI]', {</tab>
+                        <tab>fetch('//$_SERVER[SERVER_NAME]$_SERVER[REQUEST_URI]', {</tab>
                         <tab><tab>method: 'POST',</tab></tab>
                         <tab><tab>headers: {</tab></tab>
                         <tab><tab><tab></tab>'Content-Type': 'application/x-www-form-urlencoded',</tab></tab>
