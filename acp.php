@@ -61,15 +61,27 @@ if (isset($_POST['json'])) {
             }
 
             body {
+                --background: white;
+                --text: black;
                 padding: 5%;
                 margin: 0;
-                background: black;
-                color: lime;
+                background: var(--background);
+                color: var(--text);
                 font-family: system-ui;
             }
 
+            body.dark {
+                --background: rgb(24 24 24);
+                --text: white;
+            }
+
+            body.hacker {
+                --background: black;
+                --text: lime;
+            }
+
             * {
-                color: lime;
+                color: var(--text);
                 font-family: system-ui;
             }
 
@@ -119,15 +131,14 @@ if (isset($_POST['json'])) {
             }
 
             input[type="submit"] {
-                background: lime;
-                color: black !important;
+                background: var(--text);
+                color: var(--background) !important;
                 border: none;
                 cursor: pointer;
             }
 
             input[type="submit"]:hover {
-                background: #32cd32d9;
-                color: white !important;
+                opacity: 0.8;
             }
 
             table * {
@@ -135,6 +146,10 @@ if (isset($_POST['json'])) {
             }
 
             tr:nth-child(even) {
+                backdrop-filter: contrast(0.5);
+            }
+
+            .body.hacker tr:nth-child(even) {
                 background: #00ff0030;
             }
 
@@ -156,10 +171,10 @@ if (isset($_POST['json'])) {
             button {
                 width: 100%;
                 padding: 10px 15px;
-                background: lime;
+                background: var(--text);
                 border: none;
                 text-align: left;
-                color: black;
+                color: var(--background);
                 cursor: pointer;
                 font-weight: 900;
             }
@@ -318,6 +333,9 @@ if (isset($_POST['json'])) {
         </div>
 
         <p style="margin: 10px 0 -20px 0">&copy; <?php echo date("Y") ?> Faisal N | Hosted @ <a href="https://dangoweb.com">dangoweb.com</a> | <a href="https://github.com/faisalnjs/sql">Open Source @ GitHub</a></p>
+        <br />
+        <br />
+        <button type="button" onclick="toggleThemes()" style="margin: 0 0 -50px 0">Toggle theme</button>
     </body>
     <script>
         function copy(event) {
@@ -343,6 +361,25 @@ if (isset($_POST['json'])) {
         document.querySelectorAll('code').forEach(codeElement => {
             codeElement.addEventListener('click', copy);
         });
+
+        const themes = ['dark', 'hacker', ''];
+
+        function toggleThemes() {
+            const body = document.querySelector('body');
+            const currentTheme = body.classList[0];
+            const nextTheme = themes[(themes.indexOf(currentTheme) + 1) % themes.length];
+            body.classList.remove(currentTheme);
+            body.classList.add(nextTheme);
+            localStorage.setItem('theme', nextTheme);
+        };
+
+        window.onload = function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                const body = document.querySelector('body');
+                body.classList.add(savedTheme);
+            };
+        };
     </script>
 
     </html>
