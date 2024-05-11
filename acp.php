@@ -69,6 +69,7 @@ if (isset($_POST['json'])) {
 
             * {
                 color: lime;
+                font-family: system-ui;
             }
 
             p {
@@ -141,23 +142,50 @@ if (isset($_POST['json'])) {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
+                font-family: monospace;
             }
 
             tab {
                 margin-left: 15px;
+            }
+
+            button {
+                width: 100%;
+                padding: 10px 15px;
+                background: lime;
+                border: none;
+                text-align: left;
+                color: black;
+                cursor: pointer;
+                font-weight: 900;
+            }
+
+            .intro,
+            .hints {
+                height: 0px;
+                overflow: hidden;
+                transition: 0.5s;
+            }
+
+            .intro.active,
+            .hints.active {
+                height: 100%;
             }
         </style>
     </head>
 
     <body>
         <h2>sql @ dangoweb.com</h2>
-        <p>Learn how to connect to a SQL server externally using vanilla JavaScript. To begin, enter your database login details you have created. Most often your database name will start with 'username_' if your username is 'username'. Then, craft your SQL query to use the database. You can use SELECT, INSERT, UPDATE, DELETE, and more functions. I have added buttons for pre-filling the query if you need help.</p>
-        <p>To log into the database panel directly to view and edit your data, go to <a href="https://da.dangoweb.com/phpmyadmin">phpMyAdmin</a>. If you haven't already made a database for yourself, create one in the <a href="https://da.dangoweb.com:2222/user/database">Web Hosting panel here</a>.</p>
-        <p>An example of working connection details is below. It connects to the database on server with correct credentials, executes a correct query, and returns the requested data.</p>
-        <img src="example.png" width="200" />
-        <video controls style="width: 500px;">
-            <source src="example.mp4" type="video/mp4">
-        </video>
+        <button type="button" onclick="document.querySelector('.intro').classList.toggle('active')">Toggle intro</button>
+        <div class="intro">
+            <p>Learn how to connect to a SQL server externally using vanilla JavaScript. To begin, enter your database login details you have created. Most often your database name will start with 'username_' if your username is 'username'. Then, craft your SQL query to use the database. You can use SELECT, INSERT, UPDATE, DELETE, and more functions. I have added buttons for pre-filling the query if you need help.</p>
+            <p>To log into the database panel directly to view and edit your data, go to <a href="https://da.dangoweb.com/phpmyadmin">phpMyAdmin</a>. If you haven't already made a database for yourself, create one in the <a href="https://da.dangoweb.com:2222/user/database">Web Hosting panel here</a>.</p>
+            <p>An example of working connection details is below. It connects to the database on server with correct credentials, executes a correct query, and returns the requested data.</p>
+            <img src="example.png" width="200" />
+            <video controls style="width: 500px;">
+                <source src="example.mp4" type="video/mp4">
+            </video>
+        </div>
         <form method="post" action="#query">
             <div class="section">
                 <header>--- connection ---</header>
@@ -166,8 +194,8 @@ if (isset($_POST['json'])) {
                 <div>Database: <input type="text" name="database" value="<?php echo isset($_POST["database"]) ? $_POST["database"] : "" ?>" required></div>
                 <div>Server: <?php echo $_SERVER['SERVER_NAME'] ?></div>
             </div>
-            <div class="section">
-                <header>--- hints ---</header>
+            <button type="button" onclick="document.querySelector('.hints').classList.toggle('active')">Toggle hints</button>
+            <div class="section hints">
                 <div>Select One: <code onclick="copy()">SELECT * FROM tableName WHERE columnName = 'hello' LIMIT 1</code></div>
                 <div>Select Many: <code onclick="copy()">SELECT * FROM tableName WHERE columnName = 'hello'</code></div>
                 <div>Select All: <code onclick="copy()">SELECT * FROM tableName</code></div>
