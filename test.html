@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SQL Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <h1>SQL Test</h1>
+    <p>Hello my name is: </p>
+    <script async defer>
+        fetch('//sql.dangoweb.com/acp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'username': 'dangoweb_databaseName',
+                'password': 'wy8yMVLHcFMXDqDgAC4X',
+                'database': 'dangoweb_databaseName',
+                'query': `SELECT * FROM tableName LIMIT 1`,
+                'json': 'true'
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error && data.error === true) alert(data.message);
+                try {
+                    document.querySelector('p').innerHTML += data[0].name;
+                } catch { };
+            })
+            .catch((error) => {
+                alert('Error:', error);
+            });
+    </script>
+</body>
+
+</html>
