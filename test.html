@@ -4,36 +4,36 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SQL Test</title>
+    <title>Calculator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-    <h1>SQL Test</h1>
-    <p>Hello my name is: </p>
+    <h1>Calculator</h1>
+    <p>1 + 2 = </p>
     <script async defer>
-        fetch('//sql.dangoweb.com/acp', {
+        fetch('https://sql.dangoweb.com/acp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams({
-                'username': 'dangoweb_databaseName',
-                'password': 'wy8yMVLHcFMXDqDgAC4X',
-                'database': 'dangoweb_databaseName',
-                'query': `SELECT * FROM tableName LIMIT 1`,
+                'username': 'dangoweb_databaseName', // username
+                'password': 'wy8yMVLHcFMXDqDgAC4X', // password
+                'database': 'dangoweb_databaseName', // database
+                'query': `SELECT * FROM tableName`, // query
                 'json': 'true'
             })
         })
-            .then(response => response.json())
+            .then(response => response.json()) // data as JSON
             .then(data => {
-                if (data.error && data.error === true) alert(data.message);
+                if (data.error && data.error === true) alert(data.message); // alert if error
                 try {
-                    document.querySelector('p').innerHTML += data[0].name;
-                } catch { };
+                    document.querySelector('p').innerHTML += data.message[2].columnName; // display each row
+                } catch { }; // returns nothing if success but no data returned
             })
-            .catch((error) => {
-                alert('Error:', error);
+            .catch((error) => { // catch error
+                alert('Error:', error); // alert if error with code
             });
     </script>
 </body>
