@@ -52,6 +52,7 @@ if (isset($_POST['json'])) {
         <style>
             html {
                 margin: 1%;
+                scroll-behavior: smooth;
             }
 
             html::-webkit-scrollbar {
@@ -60,8 +61,9 @@ if (isset($_POST['json'])) {
 
             body {
                 padding: 5%;
+                margin: 0;
                 background: black;
-                color: limegreen;
+                color: lime;
                 font-family: system-ui;
             }
 
@@ -92,6 +94,20 @@ if (isset($_POST['json'])) {
                 flex-direction: column;
             }
 
+            .section>div:has(code) {
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .section>div:has(code) code {
+                margin-bottom: -5px;
+            }
+
+            .section>div:not(:has(code)) {
+                margin: 5px 0;
+            }
+
             input {
                 background: transparent;
                 border: none;
@@ -102,18 +118,23 @@ if (isset($_POST['json'])) {
             }
 
             input[type="submit"] {
-                background: limegreen;
-                color: white;
+                background: lime;
+                color: black !important;
                 border: none;
                 cursor: pointer;
             }
 
             input[type="submit"]:hover {
                 background: #32cd32d9;
+                color: white !important;
             }
 
             table * {
                 text-align: left;
+            }
+
+            tr:nth-child(even) {
+                background: #00ff0030;
             }
 
             code {
@@ -145,9 +166,22 @@ if (isset($_POST['json'])) {
                 <div>Database: <input type="text" name="database" value="<?php echo isset($_POST["database"]) ? $_POST["database"] : "" ?>" required></div>
                 <div>Server: <?php echo $_SERVER['SERVER_NAME'] ?></div>
             </div>
+            <div class="section">
+                <header>--- hints ---</header>
+                <div>Select One: <code onclick="copy()">SELECT * FROM tableName WHERE columnName = 'hello' LIMIT 1</code></div>
+                <div>Select Many: <code onclick="copy()">SELECT * FROM tableName WHERE columnName = 'hello'</code></div>
+                <div>Select All: <code onclick="copy()">SELECT * FROM tableName</code></div>
+                <div>Insert One: <code onclick="copy()">INSERT INTO tableName(`columnName`) VALUES ('hello')</code></div>
+                <div>Insert Many: <code onclick="copy()">INSERT INTO tableName(`columnName`, `anotherColumn`) VALUES ('hello'), ('hello world')</code></div>
+                <div>Update One: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world' WHERE `columnName` = 'hello' LIMIT 1</code></div>
+                <div>Update Many: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world' WHERE `columnName` = 'hello'</code></div>
+                <div>Update All: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world'</code></div>
+                <div>Delete One: <code onclick="copy()">DELETE FROM tableName WHERE `columnName` = 'hello' LIMIT 1</code></div>
+                <div>Delete Many: <code onclick="copy()">DELETE FROM tableName WHERE `columnName` = 'hello'</code></div>
+                <div>Delete All: <code onclick="copy()">DELETE FROM tableName</code></div>
+            </div>
             <div class="section" id="query">
                 <header>--- query ---</header>
-                <!--insert into tableName (`columnName`) values('hello')-->
                 <div>Query: <input type="text" name="query" value="<?php echo isset($_POST["query"]) ? $_POST["query"] : "" ?>" required></div>
             </div>
             <div class="section">
@@ -212,22 +246,22 @@ if (isset($_POST['json'])) {
                         <tab><tab><tab></tab>'Content-Type': 'application/x-www-form-urlencoded',</tab></tab>
                         <tab><tab>},</tab></tab>
                         <tab><tab>body: new URLSearchParams({</tab></tab>
-                        <tab><tab><tab>'username': '$username',</tab></tab></tab>
-                        <tab><tab><tab>'password': '$password',</tab></tab></tab>
-                        <tab><tab><tab>'database': '$database',</tab></tab></tab>
-                        <tab><tab><tab>'query': '$query',</tab></tab></tab>
+                        <tab><tab><tab>'username': '$username', // username</tab></tab></tab>
+                        <tab><tab><tab>'password': '$password', // password</tab></tab></tab>
+                        <tab><tab><tab>'database': '$database', // database</tab></tab></tab>
+                        <tab><tab><tab>'query': `$query`, // query</tab></tab></tab>
                         <tab><tab><tab>'json': 'true'</tab></tab></tab>
                         <tab><tab>})</tab></tab>
                         <tab>})</tab>
-                        <tab>.then(response => response.json())</tab>
+                        <tab>.then(response => response.json()) // data as JSON</tab>
                         <tab>.then(data => {</tab>
-                        <tab><tab>if (data.error && data.error === true) alert(data.message);</tab></tab>
+                        <tab><tab>if (data.error && data.error === true) alert(data.message); // alert if error</tab></tab>
                         <tab><tab>try {</tab></tab>
-                        <tab><tab><tab>data.message.forEach(row => alert(row.columnName));</tab></tab></tab>
-                        <tab><tab>} catch { };</tab></tab>
+                        <tab><tab><tab>data.message.forEach(row => alert(row.columnName)); // display each row</tab></tab></tab>
+                        <tab><tab>} catch { }; // returns nothing if success but no data returned</tab></tab>
                         <tab>})</tab>
-                        <tab>.catch((error) => {</tab>
-                        <tab><tab>console.error('Error:', error);</tab></tab>
+                        <tab>.catch((error) => { // catch error</tab>
+                        <tab><tab>alert('Error:', error); // alert if error with code</tab></tab>
                         <tab>});</tab>
                     </code>
                     EOT;
@@ -243,18 +277,12 @@ if (isset($_POST['json'])) {
             }
             ?>
         </div>
+
+        <p style="margin: 10px 0 -20px 0">&copy; <?php echo date("Y") ?> Faisal N | Hosted @ <a href="https://dangoweb.com">dangoweb.com</a> | <a href="https://github.com/faisalnjs/sql">Open Source @ GitHub</a></p>
     </body>
     <script>
-        window.onload = function() {
-            if (window.location.hash) {
-                window.location.hash = "#query";
-            }
-        }
-
-        function copy() {
+        function copy(event) {
             function selectText(node) {
-                node = document.querySelector(node);
-
                 if (document.body.createTextRange) {
                     const range = document.body.createTextRange();
                     range.moveToElementText(node);
@@ -265,16 +293,17 @@ if (isset($_POST['json'])) {
                     range.selectNodeContents(node);
                     selection.removeAllRanges();
                     selection.addRange(range);
-                };
+                }
             };
-
-            document.querySelector('code').addEventListener('click', () => {
-                selectText('code');
-                document.execCommand('copy');
-                alert('Copied to clipboard!');
-                document.getSelection().removeAllRanges();
-            });
+            selectText(event.target);
+            document.execCommand('copy');
+            alert('Copied to clipboard!');
+            document.getSelection().removeAllRanges();
         };
+
+        document.querySelectorAll('code').forEach(codeElement => {
+            codeElement.addEventListener('click', copy);
+        });
     </script>
 
     </html>
