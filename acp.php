@@ -180,15 +180,18 @@ if (isset($_POST['json'])) {
             }
 
             .intro,
-            .hints {
+            .hints,
+            .dataTypes {
                 height: 0px;
                 overflow: hidden;
                 transition: 0.5s;
             }
 
             .intro.active,
-            .hints.active {
+            .hints.active,
+            .dataTypes.active {
                 height: 100%;
+                overflow-y: scroll;
             }
 
             @media screen and (max-width: 900px) {
@@ -222,17 +225,32 @@ if (isset($_POST['json'])) {
             </div>
             <button type="button" onclick="document.querySelector('.hints').classList.toggle('active')">Toggle hints</button>
             <div class="section hints">
-                <div>Select One: <code onclick="copy()">SELECT * FROM tableName WHERE columnName = 'hello' LIMIT 1</code></div>
-                <div>Select Many: <code onclick="copy()">SELECT * FROM tableName WHERE columnName = 'hello'</code></div>
-                <div>Select All: <code onclick="copy()">SELECT * FROM tableName</code></div>
-                <div>Insert One: <code onclick="copy()">INSERT INTO tableName(`columnName`) VALUES ('hello')</code></div>
-                <div>Insert Many: <code onclick="copy()">INSERT INTO tableName(`columnName`, `anotherColumn`) VALUES ('hello'), ('hello world')</code></div>
-                <div>Update One: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world' WHERE `columnName` = 'hello' LIMIT 1</code></div>
-                <div>Update Many: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world' WHERE `columnName` = 'hello'</code></div>
-                <div>Update All: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world'</code></div>
-                <div>Delete One: <code onclick="copy()">DELETE FROM tableName WHERE `columnName` = 'hello' LIMIT 1</code></div>
-                <div>Delete Many: <code onclick="copy()">DELETE FROM tableName WHERE `columnName` = 'hello'</code></div>
-                <div>Delete All: <code onclick="copy()">DELETE FROM tableName</code></div>
+                <div>Select One Row: <code onclick="copy()">SELECT * FROM tableName WHERE columnName = 'hello' LIMIT 1</code></div>
+                <div>Select Many Rows: <code onclick="copy()">SELECT * FROM tableName WHERE columnName = 'hello'</code></div>
+                <div>Select All Rows: <code onclick="copy()">SELECT * FROM tableName</code></div>
+                <div>Insert One Row: <code onclick="copy()">INSERT INTO tableName(`columnName`) VALUES ('hello')</code></div>
+                <div>Insert Many Rows: <code onclick="copy()">INSERT INTO tableName(`columnName`, `anotherColumn`) VALUES ('hello'), ('hello world')</code></div>
+                <div>Update One Row: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world' WHERE `columnName` = 'hello' LIMIT 1</code></div>
+                <div>Update Many Rows: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world' WHERE `columnName` = 'hello'</code></div>
+                <div>Update Multiple Columns: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world', `columnName2` = 'hello' WHERE `columnName` = 'hello'</code></div>
+                <div>Update All Rows: <code onclick="copy()">UPDATE tableName SET `columnName` = 'world'</code></div>
+                <div>Delete One Row: <code onclick="copy()">DELETE FROM tableName WHERE `columnName` = 'hello' LIMIT 1</code></div>
+                <div>Delete Many Rows: <code onclick="copy()">DELETE FROM tableName WHERE `columnName` = 'hello'</code></div>
+                <div>Delete All Rows: <code onclick="copy()">DELETE FROM tableName</code></div>
+                <br>
+                <br>
+                <div>Rows to return: <code onclick="copy()">LIMIT 1</code></div>
+                <div>Includes value: <code onclick="copy()">WHERE `columnName` LIKE '%hello%'</code></div>
+                <div>And condition: <code onclick="copy()">WHERE `columnName` = 'hello' AND WHERE `columnName2` = `world`</code></div>
+                <div>Or condition: <code onclick="copy()">WHERE `columnName` = 'hello' OR WHERE `columnName2` = `world`</code></div>
+                <div>Not condition: <code onclick="copy()">WHERE NOT `columnName` = 'hello'</code></div>
+                <br>
+                <br>
+                <div>Create table: <code onclick="copy()">CREATE TABLE tableName (columnName VARCHAR(255), columnName2 INT)</code></div>
+            </div>
+            <button type="button" onclick="document.querySelector('.dataTypes').classList.toggle('active')">Toggle data types</button>
+            <div class="section dataTypes">
+                <img src="dataTypes.png">
             </div>
             <div class="section" id="query">
                 <header>--- query ---</header>
