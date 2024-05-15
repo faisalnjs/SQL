@@ -254,7 +254,7 @@ if (isset($_POST['json'])) {
             </div>
             <div class="section" id="query">
                 <header>--- query ---</header>
-                <div>Query: <input type="text" name="query" value="<?php echo isset($_POST["query"]) ? $_POST["query"] : "" ?>" required></div>
+                <div>Query: <input type="text" name="query" onkeyup="fixQuery()" value="<?php echo isset($_POST["query"]) ? $_POST["query"] : "" ?>" required></div>
             </div>
             <div class="section">
                 <header>--- test ---</header>
@@ -397,6 +397,11 @@ if (isset($_POST['json'])) {
                 const body = document.querySelector('body');
                 body.classList.add(savedTheme);
             };
+        };
+
+        function fixQuery() {
+            elem = document.querySelector('input');
+            elem.value = elem.value.replaceAll('select', 'SELECT').replaceAll('from', 'FROM').replaceAll('where', 'WHERE').replaceAll('limit', 'LIMIT').replaceAll('insert', 'INSERT').replaceAll('into', 'INTO').replaceAll('values', 'VALUES').replaceAll('update', 'UPDATE').replaceAll('set', 'SET').replaceAll('delete', 'DELETE').replaceAll('like', 'LIKE').replaceAll('and', 'AND').replaceAll('or', 'OR').replaceAll('not', 'NOT').replaceAll('create', 'CREATE');
         };
     </script>
 
