@@ -400,7 +400,7 @@ if (isset($_POST['json'])) {
         };
 
         function fixQuery() {
-            elem = document.querySelector('input');
+            elem = document.querySelector('#query input');
             elem.value = elem.value.replaceAll('select', 'SELECT').replaceAll('from', 'FROM').replaceAll('where', 'WHERE').replaceAll('limit', 'LIMIT').replaceAll('insert', 'INSERT').replaceAll('into', 'INTO').replaceAll('values', 'VALUES').replaceAll('update', 'UPDATE').replaceAll('set', 'SET').replaceAll('delete', 'DELETE').replaceAll('like', 'LIKE').replaceAll('and', 'AND').replaceAll('or', 'OR').replaceAll('not', 'NOT').replaceAll('create', 'CREATE');
         };
     </script>
